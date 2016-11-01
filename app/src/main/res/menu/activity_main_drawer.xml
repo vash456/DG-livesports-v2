@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_principal"
+            android:title="@string/principal" />
+        <item
+            android:id="@+id/nav_resultados"
+            android:title="@string/resultados" />
+        <item
+            android:id="@+id/nav_partidos_tablas"
+            android:title="@string/partidos_tablas" />
+        <item
+            android:id="@+id/nav_noticias"
+            android:title="@string/noticias" />
+        <item
+            android:id="@+id/nav_videos"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/videos" />
+        <item
+            android:id="@+id/nav_social"
+            android:title="@string/social" />
+        <item
+            android:id="@+id/nav_notificaciones"
+            android:title="@string/notificaciones" />
+        <item
+            android:id="@+id/nav_configuracion"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/configuracion" />
+        <item
+            android:id="@+id/nav_cerrar_sesion"
+            android:title="@string/cerrar_sesion" />
+    </group>
+
+</menu>
