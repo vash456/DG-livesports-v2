@@ -29,6 +29,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -155,15 +156,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.child(user1).exists()){
-                            Log.d("data",dataSnapshot.child(user1).getValue().toString());
+                            Log.d("DATOSREGISTRO",dataSnapshot.child(user1).getValue().toString());
                             Toast.makeText(getApplicationContext(),dataSnapshot.child(user1).getValue().toString(),Toast.LENGTH_SHORT).show();
 
-                            Usuarios_data usuarios_data = dataSnapshot.child(user1).getValue(Usuarios_data.class);
+                            Map<String, Object> newPost = (Map<String, Object>) dataSnapshot.getValue();
+                            //System.out.println("Author: " + newPost.get("user"));
+                            //Usuarios_data usuarios_data = dataSnapshot.child(user1).getValue(Usuarios_data.class);
+                            Toast.makeText(getApplicationContext(),"Author: " + newPost.getClass().toString(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"Author: " + dataSnapshot.child(user1).getValue(Usuarios_data.class).toString(),Toast.LENGTH_SHORT).show();
+
                             //usuarios_data = dataSnapshot.child(user1).getValue(Usuarios_data.class);
                             //info.add(dataSnapshot.child("Usuarios_data"+user).getValue(Usuarios_data.class));
                             //if (password.equals(info.get(0).getUser())){
                                 //email = info.get(0).getEmail();
-                            if (password.equals(usuarios_data.getUser())){
+                            /*if (password.equals(usuarios_data.getUser())){
                                 email = usuarios_data.getEmail();
                                 sesion = "abierta";
                                 savePrefs();
@@ -173,7 +179,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             }else {
                                 Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecta.",Toast.LENGTH_SHORT).show();
                                 return;
-                            }
+                            }*/
 
                         }else {
                             Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecta.",Toast.LENGTH_SHORT).show();

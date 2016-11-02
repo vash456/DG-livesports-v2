@@ -86,7 +86,7 @@ public class RegistroActivity extends AppCompatActivity {
                         if(dataSnapshot.child(user).exists()){
                             Toast.makeText(getApplicationContext(),"Usuario existente",Toast.LENGTH_SHORT).show();
                             Toast.makeText(getApplicationContext(),dataSnapshot.child(user).getValue().toString(),Toast.LENGTH_SHORT).show();
-                            Log.d("XXXXXXXXXXXXXXXXXX",dataSnapshot.child(user).getValue().toString());
+                            Log.d("DATOSREGISTRO",dataSnapshot.child(user).getValue().toString());
                             return;
                         }else {
                             //Toast.makeText(getApplicationContext(),"no encontrado",Toast.LENGTH_SHORT).show();
