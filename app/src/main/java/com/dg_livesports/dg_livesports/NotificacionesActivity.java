@@ -16,7 +16,7 @@ public class NotificacionesActivity extends AppCompatActivity implements Navigat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_notificaciones);
 
         //////navigation drawer///////
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

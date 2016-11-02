@@ -17,7 +17,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_Login"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.ActionBar.Transparent"/>
         <activity
             android:name=".RegistroActivity"
             android:label="@string/title_activity_registro"
@@ -36,8 +36,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".VideosActivity"
-            android:label="@string/title_activity_videos"/>
-            <!--android:theme="@style/AppTheme.NoActionBar" />-->
+            android:label="@string/title_activity_videos"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NotificacionesActivity"
             android:label="@string/title_activity_notificaciones"

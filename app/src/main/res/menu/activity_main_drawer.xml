@@ -20,6 +20,7 @@
             android:title="@string/videos" />
         <item
             android:id="@+id/nav_social"
+            android:icon="@drawable/ic_forum_black_24dp"
             android:title="@string/social" />
         <item
             android:id="@+id/nav_notificaciones"

@@ -16,7 +16,7 @@ public class ConfiguracionesActivity extends AppCompatActivity implements Naviga
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_configuraciones);
 
         //////navigation drawer///////
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

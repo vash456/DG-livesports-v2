@@ -1,6 +1,8 @@
 package com.dg_livesports.dg_livesports;
 
-import android.app.ActionBar;
+//import android.app.ActionBar;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.ActionBar;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -13,19 +15,29 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
+import java.util.ArrayList;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //DominosSQLiteHelper usuarios;
-    SQLiteDatabase dbUsuarios;
-    ContentValues dataBD;
+    ArrayList<Usuarios_data> info;
 
-    Button b_entrar, b_registro;
+    private String FIREBASE_URL="https://final-dygsports.firebaseio.com";
+    private Firebase firebasedatos;
+
+    Button b_entrar;
     EditText et_usuario, et_password;
     TextView t_Registro;
 
@@ -33,7 +45,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String password;
     private String email;
     private String sesion;
-    private boolean flag = false;
 
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
@@ -43,8 +54,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //usuarios = new DominosSQLiteHelper(this, "DominosBD", null, 1);
-        //dbUsuarios = usuarios.getWritableDatabase();
+        info = new ArrayList<>();
+        Firebase.setAndroidContext(this);
+        firebasedatos = new Firebase(FIREBASE_URL);
 
         Bundle extras;
 
@@ -59,37 +71,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (extras != null) {
             sesion = extras.getString("sesion");
             Toast.makeText(this, "Sesiòn "+sesion,Toast.LENGTH_SHORT).show();
+            user = "Invitado";
+            password = "";
+            email = "";
+            savePrefs();
             editor.putString("var_sesion",sesion);
             editor.commit();
-            flag = true;
         }
         if (sesion.equals("abierta")) {
-            Intent intent3 = new Intent(this, MainActivity.class);
-            //intent3.putExtra("usuario", user);
-            //intent3.putExtra("password", password);
-            //intent3.putExtra("email", email);
-            startActivity(intent3);
-            finish();
+            //Intent intent3 = new Intent(this, MainActivity.class);
+            //startActivity(intent3);
+            //finish();
         }else if (sesion.equals("cerrada")){
-            flag = true;
+            user = "Invitado";
+            password = "";
+            email = "";
+            savePrefs();
         }
+
 
         ////////////////////////////////////////
 
-        //b_registro = (Button) findViewById(R.id.b_registro);
         b_entrar = (Button) findViewById(R.id.b_entrar);
         et_usuario = (EditText) findViewById(R.id.et_usuario);
         et_password = (EditText) findViewById(R.id.et_password);
         t_Registro = (TextView) findViewById(R.id.t_Registro);
 
 
-        ////////////////////////////esta parte es solo para recibir
-       /* Bundle extras = getIntent().getExtras();//para mandar datos
-        String user = extras.getString("usuario");
-        String contrasena = extras.getString("contrasena");
-        /////////////////////////
-        Toast.makeText(this, "user: "+user+"contrasena: "+contrasena,Toast.LENGTH_SHORT).show();
-        *///1
 
         SpannableString content = new SpannableString(t_Registro.getText().toString());
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
@@ -97,8 +105,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         t_Registro.setOnClickListener(this);
 
-        //b_registro.setOnClickListener(this);//si aparece error seleccionar en la segunda opcion
         b_entrar.setOnClickListener(this);
+
+        ////// botón de atrás////////
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        //actionbar transparente
+        //actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+
+        setStatusBarTranslucent(true);
 
     }
 
@@ -119,46 +135,58 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //    break;
 
             case R.id.b_entrar:
-                if (flag == true){
-                    if (TextUtils.isEmpty(et_usuario.getText().toString())) {
-                        et_usuario.setError("Este campo no puede estar vacio");
-                        return;
-                    }
-                    if (TextUtils.isEmpty(et_password.getText().toString())) {
-                        et_password.setError("Este campo no puede estar vacio");
-                        return;
-                    }
 
-                    user = et_usuario.getText().toString();
-                    password = et_password.getText().toString();
+                if (TextUtils.isEmpty(et_usuario.getText().toString())) {
+                    et_usuario.setError("Este campo no puede estar vacio");
+                    return;
+                }
+                if (TextUtils.isEmpty(et_password.getText().toString())) {
+                    et_password.setError("Este campo no puede estar vacio");
+                    return;
+                }
 
-                    Cursor c = dbUsuarios.rawQuery("SELECT * FROM DatosUsuarios WHERE nombre='"+
-                            user+"'",null);
+                user = et_usuario.getText().toString();
+                password = et_password.getText().toString();
 
-                    //if (user.equals(et_usuario.getText().toString())){
-                    if (c.moveToFirst()){
-                        if (password.equals(c.getString(2))){
-                            email = c.getString(3);
-                            sesion = "abierta";
-                            savePrefs();
-                            Intent intent2 = new Intent(this, MainActivity.class);
-                            //intent2.putExtra("usuario", user);
-                            //intent2.putExtra("password", password);
-                            //intent2.putExtra("email", email);
-                            startActivity(intent2);
-                            finish();
+                //verifica si ya existe el contacto
+                final String user1 = "Usuarios_data"+user;
+
+                firebasedatos.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.child(user1).exists()){
+                            Log.d("data",dataSnapshot.child(user1).getValue().toString());
+                            Toast.makeText(getApplicationContext(),dataSnapshot.child(user1).getValue().toString(),Toast.LENGTH_SHORT).show();
+
+                            Usuarios_data usuarios_data = dataSnapshot.child(user1).getValue(Usuarios_data.class);
+                            //usuarios_data = dataSnapshot.child(user1).getValue(Usuarios_data.class);
+                            //info.add(dataSnapshot.child("Usuarios_data"+user).getValue(Usuarios_data.class));
+                            //if (password.equals(info.get(0).getUser())){
+                                //email = info.get(0).getEmail();
+                            if (password.equals(usuarios_data.getUser())){
+                                email = usuarios_data.getEmail();
+                                sesion = "abierta";
+                                savePrefs();
+                                Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent2);
+                                finish();
+                            }else {
+                                Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecta.",Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
                         }else {
-                            Toast.makeText(this, "Usuario o contraseña incorrecta.",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecta.",Toast.LENGTH_SHORT).show();
                             return;
                         }
-                    }else {
-                        Toast.makeText(this, "Usuario o contraseña incorrecta.",Toast.LENGTH_SHORT).show();
-                        return;
                     }
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
 
-                }else Toast.makeText(this, "No hay usuarios registrados",Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-                break;
+            break;
         }
 
     }
@@ -167,14 +195,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {//2
         if (requestCode == 1234 && resultCode == RESULT_OK){
             //user = data.getExtras().getString("usuario");
-            //password = data.getExtras().getString("contrasena");
-            //email = data.getExtras().getString("email");
-
-            flag = true;
-            /////////////////////////
-
-            //Log.d("user",user);//para mostrar datos en consola android
-            //Log.d("contraseña",password);
 
             editor.putString("var_sesion","cerrada");
             editor.commit();
@@ -202,8 +222,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         email = String.valueOf(prefs.getString("var_email","Email no definido"));
         sesion = String.valueOf(prefs.getString("var_sesion","sesion no definida"));
     }
-    public void clearPrefs(){
-        editor.clear();
-        editor.commit();
+
+    ////// botón de atrás////////
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    ///transparencias actionbar
+    protected void setStatusBarTranslucent(boolean makeTranslucent) {
+        if (makeTranslucent) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
     }
 }

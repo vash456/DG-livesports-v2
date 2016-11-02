@@ -1,6 +1,8 @@
 package com.dg_livesports.dg_livesports;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -15,8 +17,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
+    private String user;
+    private String password;
+    private String email;
+    private String sesion;
 
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
@@ -26,6 +38,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //////preferencias compartidas y cerrar sesion////////
+
+        Bundle extras;
+
+        extras = getIntent().getExtras();
+
+        prefs = getSharedPreferences("preferencia", Context.MODE_PRIVATE);
+        editor = prefs.edit();
+
+        refreshPrefs();
+        if (extras != null) {
+            sesion = extras.getString("sesion");
+            Toast.makeText(this, "Sesiòn "+sesion,Toast.LENGTH_SHORT).show();
+            user = "Invitado";
+            password = "";
+            email = "";
+            savePrefs();
+            editor.putString("var_sesion",sesion);
+            editor.commit();
+        }
+        if (sesion.equals("abierta")) {
+            //Intent intent3 = new Intent(this, MainActivity.class);
+            //startActivity(intent3);
+            //finish();
+        }else if (sesion.equals("cerrada")){
+            user = "Invitado";
+            password = "";
+            email = "";
+            savePrefs();
+        }
+
 
         //////navigation drawer///////
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -39,6 +83,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //////datos usuario en navigation////////
+
+        View hView =  navigationView.getHeaderView(0);
+        TextView t_nav_user = (TextView) hView.findViewById(R.id.t_nav_user);
+        t_nav_user.setText(user);
+        TextView t_nav_email = (TextView) hView.findViewById(R.id.t_nav_email);
+        t_nav_email.setText(email);
 
         ///////tabs///////
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -184,6 +236,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             return null;
         }
+    }
+
+    public void savePrefs(){
+        editor.putString("var_name",user);
+        editor.putString("var_pass",password);
+        editor.putString("var_email",email);
+        editor.putString("var_sesion",sesion);
+        editor.commit();
+    }
+    public void refreshPrefs(){
+        user = String.valueOf(prefs.getString("var_name","Nombre no definido"));
+        password = String.valueOf(prefs.getString("var_pass","contraseña no definida"));
+        email = String.valueOf(prefs.getString("var_email","Email no definido"));
+        sesion = String.valueOf(prefs.getString("var_sesion","cerrada"));
     }
 
 }
