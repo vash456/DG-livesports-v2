@@ -1,9 +1,6 @@
 package com.dg_livesports.dg_livesports;
 
-import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -36,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
     public static int int_items = 3 ;
+
+    FragmentManager mFragmentManager;
+    FragmentTransaction mFragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.nav_principal);
         navigationView.setNavigationItemSelectedListener(this);
 
         //////datos usuario en navigation////////
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         t_nav_email.setText(email);
 
         ///////tabs///////
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        /*tabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
         MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
@@ -111,7 +113,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void run() {
                 tabLayout.setupWithViewPager(viewPager);
             }
-        });
+        });*/
+
+        mFragmentManager = getSupportFragmentManager();
+        mFragmentTransaction = mFragmentManager.beginTransaction();
+        mFragmentTransaction.replace(R.id.containerView,new MainTabsFragment()).commit();
 
     }
 
@@ -152,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.action_login) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
-            finish();
+            //finish();
 
             return true;
         }
@@ -174,36 +180,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        /////// fragment tabs///////
+        mFragmentManager = getSupportFragmentManager();
+        mFragmentTransaction = mFragmentManager.beginTransaction();
+
+
         switch (id) {
             case R.id.nav_principal:
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
+                mFragmentTransaction.replace(R.id.containerView,new MainTabsFragment()).commit();
                 break;
             case R.id.nav_resultados:
-                Intent intent2 = new Intent(getApplicationContext(), ResultadosActivity.class);
-                startActivity(intent2);
-                finish();
+                mFragmentTransaction.replace(R.id.containerView,new M1_ResultadosFragment()).commit();
                 break;
             case R.id.nav_partidos_tablas:
-                Intent intent3 = new Intent(getApplicationContext(), ParttablasActivity.class);
-                startActivity(intent3);
-                finish();
+                mFragmentTransaction.replace(R.id.containerView,new M2_Part_TablasFragment()).commit();
                 break;
             case R.id.nav_noticias:
-                Intent intent4 = new Intent(getApplicationContext(), NoticiasActivity.class);
-                startActivity(intent4);
-                finish();
+                mFragmentTransaction.replace(R.id.containerView,new M3_NoticiasFragment()).commit();
                 break;
             case R.id.nav_videos:
-                Intent intent5 = new Intent(getApplicationContext(), VideosActivity.class);
-                startActivity(intent5);
-                finish();
+                mFragmentTransaction.replace(R.id.containerView,new M4_VideosFragment()).commit();
                 break;
             case R.id.nav_social:
-                Intent intent6 = new Intent(getApplicationContext(), SocialActivity.class);
-                startActivity(intent6);
-                finish();
+                mFragmentTransaction.replace(R.id.containerView,new M5_SocialFragment()).commit();
                 break;
             case R.id.nav_notificaciones:
                 Intent intent7 = new Intent(getApplicationContext(), NotificacionesActivity.class);
@@ -213,7 +212,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_configuracion:
                 Intent intent8 = new Intent(getApplicationContext(), ConfiguracionesActivity.class);
                 startActivity(intent8);
-                finish();
                 break;
         }
 

@@ -8,6 +8,7 @@
             android:title="@string/principal" />
         <item
             android:id="@+id/nav_resultados"
+            android:icon="@drawable/icon_soccer"
             android:title="@string/resultados" />
         <item
             android:id="@+id/nav_partidos_tablas"

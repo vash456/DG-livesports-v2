@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.dg_livesports.dg_livesports">
+    package="com.dg_livesports.dg_livesports" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_Login"
-            android:theme="@style/AppTheme.ActionBar.Transparent"/>
+            android:theme="@style/AppTheme.ActionBar.Transparent" />
         <activity
             android:name=".RegistroActivity"
             android:label="@string/title_activity_registro"
@@ -45,12 +46,12 @@
         <activity
             android:name=".ConfiguracionesActivity"
             android:label="@string/title_activity_configuraciones"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.ActionBar.TitleTextStyle"/>
         <activity
             android:name=".SocialActivity"
             android:label="@string/title_activity_social"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
