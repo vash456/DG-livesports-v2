@@ -84,7 +84,7 @@ public class SocialActivity extends AppCompatActivity implements NavigationView.
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_login) {
             return true;
         }
 
@@ -135,11 +135,6 @@ public class SocialActivity extends AppCompatActivity implements NavigationView.
             case R.id.nav_configuracion:
                 Intent intent8 = new Intent(getApplicationContext(), ConfiguracionesActivity.class);
                 startActivity(intent8);
-                finish();
-                break;
-            case R.id.nav_cerrar_sesion:
-                Intent intent9 = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent9);
                 finish();
                 break;
         }

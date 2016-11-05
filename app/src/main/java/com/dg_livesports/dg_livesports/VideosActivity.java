@@ -10,8 +10,19 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
+import com.firebase.client.Firebase;
 
 public class VideosActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+    private String FIREBASE_URL="https://final-dygsports.firebaseio.com", vid, vid2;
+    private Firebase firebasedatos;
+
+    private Button b_guardar, b_quitar, b_guardar2, b_quitar2;
+
+    private Firebase firebd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +41,56 @@ public class VideosActivity extends AppCompatActivity implements NavigationView.
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Firebase.setAndroidContext(this);
+        firebasedatos = new Firebase(FIREBASE_URL);
+
+        b_guardar = (Button) findViewById(R.id.bGuardar);
+        b_quitar = (Button) findViewById(R.id.bQuitar);
+        b_guardar2 = (Button) findViewById(R.id.bGuardar2);
+        b_quitar2 = (Button) findViewById(R.id.bQuitar2);
+
+        b_guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                vid = toString().valueOf(R.id.video1);
+                Videos_data video = new Videos_data(vid);
+                firebd = firebasedatos.child("video_"+vid);
+                firebd.setValue(video);
+            }
+        });
+
+        b_quitar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                vid = toString().valueOf(R.id.video1);
+                firebd = firebasedatos.child("video_"+vid);
+                firebd.removeValue();
+            }
+        });
+/////////////////////////////////////////////////////
+        b_guardar2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                vid2 = toString().valueOf(R.id.video2);
+                Videos_data video2 = new Videos_data(vid2);
+                firebd = firebasedatos.child("video_"+vid2);
+                firebd.setValue(video2);
+            }
+        });
+
+        b_quitar2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                vid2 = toString().valueOf(R.id.video2);
+                firebd = firebasedatos.child("video_"+vid2);
+                firebd.removeValue();
+            }
+        });
+
+
     }
 
     @Override
@@ -52,7 +113,7 @@ public class VideosActivity extends AppCompatActivity implements NavigationView.
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_login) {
             return true;
         }
 
@@ -103,11 +164,6 @@ public class VideosActivity extends AppCompatActivity implements NavigationView.
             case R.id.nav_configuracion:
                 Intent intent8 = new Intent(getApplicationContext(), ConfiguracionesActivity.class);
                 startActivity(intent8);
-                finish();
-                break;
-            case R.id.nav_cerrar_sesion:
-                Intent intent9 = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent9);
                 finish();
                 break;
         }

@@ -27,6 +27,8 @@ public class RegistroActivity extends AppCompatActivity {
     private EditText et_usuario, et_password1, et_password2, et_email;
     private String nombre,password,email;
 
+    private boolean flagUserExitente = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,21 +77,31 @@ public class RegistroActivity extends AppCompatActivity {
                 password = et_password2.getText().toString();
                 email = et_email.getText().toString();
 
-                Firebase firebd;
+                final Firebase[] firebd = new Firebase[1];
 
                 //verifica si ya existe el contacto
-                final String user = "Usuarios_data"+nombre;
+                final String user = "Usuarios_data "+nombre;
 
                 firebasedatos.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.child(user).exists()){
-                            Toast.makeText(getApplicationContext(),"Usuario existente",Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getApplicationContext(),dataSnapshot.child(user).getValue().toString(),Toast.LENGTH_SHORT).show();
+                            et_usuario.setError("Este usuario ya existe");
+                            flagUserExitente = true;
+                            //Toast.makeText(getApplicationContext(),"Usuario existente",Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(),dataSnapshot.child(user).getValue().toString(),Toast.LENGTH_SHORT).show();
                             Log.d("DATOSREGISTRO",dataSnapshot.child(user).getValue().toString());
                             return;
                         }else {
                             //Toast.makeText(getApplicationContext(),"no encontrado",Toast.LENGTH_SHORT).show();
+                            firebd[0] = firebasedatos.child("Usuarios_data "+nombre);
+                            Usuarios_data usuarios_data = new Usuarios_data(nombre,password,email);
+                            firebd[0].setValue(usuarios_data);
+
+
+                            Intent intent = new Intent();
+                            setResult(RESULT_OK,intent);
+                            finish();
                         }
                     }
                     @Override
@@ -98,14 +110,19 @@ public class RegistroActivity extends AppCompatActivity {
                     }
                 });
 
-                firebd = firebasedatos.child("Usuarios_data"+nombre);
+                /*if(flagUserExitente){
+                    flagUserExitente = false;
+                    return;
+                }*/
+
+                /*firebd[0] = firebasedatos.child("Usuarios_data "+nombre);
                 Usuarios_data usuarios_data = new Usuarios_data(nombre,password,email);
-                firebd.setValue(usuarios_data);
+                firebd[0].setValue(usuarios_data);
 
 
                 Intent intent = new Intent();
                 setResult(RESULT_OK,intent);
-                finish();
+                finish();*/
 
             }
         });

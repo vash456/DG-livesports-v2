@@ -13,6 +13,10 @@ public class Usuarios_data {
         this.email = email;
     }
 
+    public Usuarios_data() {
+
+    }
+
     public String getUser() {
         return user;
     }

@@ -4,15 +4,18 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_principal"
+            android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/principal" />
         <item
             android:id="@+id/nav_resultados"
             android:title="@string/resultados" />
         <item
             android:id="@+id/nav_partidos_tablas"
+            android:icon="@drawable/icon_field_football"
             android:title="@string/partidos_tablas" />
         <item
             android:id="@+id/nav_noticias"
+            android:icon="@drawable/icon_news"
             android:title="@string/noticias" />
         <item
             android:id="@+id/nav_videos"
@@ -24,14 +27,12 @@
             android:title="@string/social" />
         <item
             android:id="@+id/nav_notificaciones"
+            android:icon="@drawable/ic_add_alert_black_24dp"
             android:title="@string/notificaciones" />
         <item
             android:id="@+id/nav_configuracion"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/configuracion" />
-        <item
-            android:id="@+id/nav_cerrar_sesion"
-            android:title="@string/cerrar_sesion" />
     </group>
 
 </menu>

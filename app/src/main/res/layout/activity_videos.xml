@@ -25,7 +25,7 @@
         android:fitsSystemWindows="true"
         tools:openDrawer="start">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <LinearLayout
@@ -38,9 +38,35 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/noticias"/>
+                    android:src="@drawable/noticias2"
+                    android:id="@+id/video1"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Guardar"
+                    android:id="@+id/bGuardar"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Quitar"
+                    android:id="@+id/bQuitar"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/noticias3"
+                    android:id="@+id/video2"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Guardar"
+                    android:id="@+id/bGuardar2"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Quitar"
+                    android:id="@+id/bQuitar2"/>
             </LinearLayout>
-        </RelativeLayout>
+        </ScrollView>
 
         <android.support.design.widget.NavigationView
             android:id="@+id/nav_view"

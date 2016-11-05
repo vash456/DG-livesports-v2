@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/b_entrar"
         android:text="Entrar"
+        android:textColor="@color/black"
         android:layout_gravity="center"/>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -58,18 +59,18 @@
         android:layout_gravity="center"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@drawable/facebook"
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/icon_facebook"
             android:layout_gravity="center"/>
         <TextView
             android:layout_width="40dp"
             android:layout_height="5dp" />
-        <ImageButton
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@drawable/google"/>
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/icon_google_plus"/>
     </LinearLayout>
 
 

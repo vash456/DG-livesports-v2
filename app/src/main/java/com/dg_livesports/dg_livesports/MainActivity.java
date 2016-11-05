@@ -1,6 +1,9 @@
 package com.dg_livesports.dg_livesports;
 
+import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (extras != null) {
             sesion = extras.getString("sesion");
             Toast.makeText(this, "Sesiòn "+sesion,Toast.LENGTH_SHORT).show();
+
             user = "Invitado";
             password = "";
             email = "";
@@ -60,16 +64,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             editor.commit();
         }
         if (sesion.equals("abierta")) {
+
             //Intent intent3 = new Intent(this, MainActivity.class);
             //startActivity(intent3);
             //finish();
         }else if (sesion.equals("cerrada")){
+
             user = "Invitado";
             password = "";
             email = "";
             savePrefs();
         }
-
 
         //////navigation drawer///////
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -123,6 +128,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+
+        ///control para ocultar o mostrar elementos del menu overflow
+        MenuItem MI_Sesion = menu.findItem(R.id.action_cerrar_sesion);
+        MenuItem MI_Login = menu.findItem(R.id.action_login);
+
+        if (sesion.equals("abierta")){
+            MI_Sesion.setVisible(true);
+            MI_Login.setVisible(false);
+            this.invalidateOptionsMenu();
+        }else {
+            MI_Sesion.setVisible(false);
+            MI_Login.setVisible(true);
+            this.invalidateOptionsMenu();
+        }
         return true;
     }
 
@@ -130,8 +149,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_login) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+
+            return true;
+        }
+
+        if (id == R.id.action_cerrar_sesion) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("sesion","cerrada");
             startActivity(intent);
             finish();
 
@@ -185,11 +213,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_configuracion:
                 Intent intent8 = new Intent(getApplicationContext(), ConfiguracionesActivity.class);
                 startActivity(intent8);
-                finish();
-                break;
-            case R.id.nav_cerrar_sesion:
-                Intent intent9 = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent9);
                 finish();
                 break;
         }
@@ -251,6 +274,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         email = String.valueOf(prefs.getString("var_email","Email no definido"));
         sesion = String.valueOf(prefs.getString("var_sesion","cerrada"));
     }
+
+   /* private void createAndShowAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Debe ");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Toast.makeText(getActivity(), "Eliminado de favoritos", Toast.LENGTH_SHORT).show();
+                //Object toRemove = adaptador.getItemViewType(position1);
+                //Intent intent = new Intent(getContext(), PerfilActivity.class);
+                //intent.putExtra("tabFlag",true);
+                //startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Toast.makeText(getActivity(), "cancelar", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }*/
 
 }
 

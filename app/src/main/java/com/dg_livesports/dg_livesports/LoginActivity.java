@@ -150,36 +150,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 password = et_password.getText().toString();
 
                 //verifica si ya existe el contacto
-                final String user1 = "Usuarios_data"+user;
+                final String user1 = "Usuarios_data "+user;
 
                 firebasedatos.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.child(user1).exists()){
                             Log.d("DATOSREGISTRO",dataSnapshot.child(user1).getValue().toString());
-                            Toast.makeText(getApplicationContext(),dataSnapshot.child(user1).getValue().toString(),Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(),dataSnapshot.child(user1).getValue().toString(),Toast.LENGTH_SHORT).show();
 
-                            Map<String, Object> newPost = (Map<String, Object>) dataSnapshot.getValue();
-                            //System.out.println("Author: " + newPost.get("user"));
-                            //Usuarios_data usuarios_data = dataSnapshot.child(user1).getValue(Usuarios_data.class);
-                            Toast.makeText(getApplicationContext(),"Author: " + newPost.getClass().toString(),Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getApplicationContext(),"Author: " + dataSnapshot.child(user1).getValue(Usuarios_data.class).toString(),Toast.LENGTH_SHORT).show();
-
-                            //usuarios_data = dataSnapshot.child(user1).getValue(Usuarios_data.class);
                             //info.add(dataSnapshot.child("Usuarios_data"+user).getValue(Usuarios_data.class));
-                            //if (password.equals(info.get(0).getUser())){
-                                //email = info.get(0).getEmail();
-                            /*if (password.equals(usuarios_data.getUser())){
+                            //if (password.equals(info.get(0).getPassword())){
+                            //    email = info.get(0).getEmail();
+                            Usuarios_data usuarios_data = dataSnapshot.child("Usuarios_data "
+                                    +user).getValue(Usuarios_data.class);
+                            if (password.equals(usuarios_data.getPassword())){
                                 email = usuarios_data.getEmail();
                                 sesion = "abierta";
                                 savePrefs();
+                                Toast.makeText(getApplicationContext(), "Bienvenido !!!",Toast.LENGTH_SHORT).show();
                                 Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent2);
                                 finish();
                             }else {
                                 Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecta.",Toast.LENGTH_SHORT).show();
                                 return;
-                            }*/
+                            }
 
                         }else {
                             Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecta.",Toast.LENGTH_SHORT).show();
