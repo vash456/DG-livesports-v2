@@ -77,7 +77,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:id="@+id/b_aceptar"
-            android:text="aceptar"/>
+            android:text="aceptar" />
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"

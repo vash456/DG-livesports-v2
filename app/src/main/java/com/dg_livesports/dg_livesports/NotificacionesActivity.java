@@ -64,7 +64,7 @@ public class NotificacionesActivity extends AppCompatActivity implements Navigat
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id) {
+        /*switch (id) {
             case R.id.nav_principal:
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
@@ -105,7 +105,7 @@ public class NotificacionesActivity extends AppCompatActivity implements Navigat
                 startActivity(intent8);
                 finish();
                 break;
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -27,6 +27,15 @@
     <string name="abierta">abierta</string>
     <string name="cerrada">cerrada</string>
 
+    <!--Array con los valores de la cabecera de la tabla-->
+    <string-array name="cabecera_tabla">
+        <item>Id de la fila</item>
+        <item>Valor</item>
+        <item>Valor 2</item>
+        <item>Valor 3</item>
+        <item>Valor 4</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

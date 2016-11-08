@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
 
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         //////navigation drawer///////
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -188,26 +190,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.nav_principal:
                 mFragmentTransaction.replace(R.id.containerView,new MainTabsFragment()).commit();
+                toolbar.setTitle("DG LiveSports");
                 break;
             case R.id.nav_resultados:
                 mFragmentTransaction.replace(R.id.containerView,new M1_ResultadosFragment()).commit();
+                toolbar.setTitle("Resultados");
                 break;
             case R.id.nav_partidos_tablas:
                 mFragmentTransaction.replace(R.id.containerView,new M2_Part_TablasFragment()).commit();
+                toolbar.setTitle("Partidos y Tablas");
                 break;
             case R.id.nav_noticias:
                 mFragmentTransaction.replace(R.id.containerView,new M3_NoticiasFragment()).commit();
+                toolbar.setTitle("Noticias");
                 break;
             case R.id.nav_videos:
                 mFragmentTransaction.replace(R.id.containerView,new M4_VideosFragment()).commit();
+                toolbar.setTitle("Videos");
                 break;
             case R.id.nav_social:
                 mFragmentTransaction.replace(R.id.containerView,new M5_SocialFragment()).commit();
+                toolbar.setTitle("Social");
                 break;
             case R.id.nav_notificaciones:
-                Intent intent7 = new Intent(getApplicationContext(), NotificacionesActivity.class);
+                /*Intent intent7 = new Intent(getApplicationContext(), NotificacionesActivity.class);
                 startActivity(intent7);
-                finish();
+                finish();*/
                 break;
             case R.id.nav_configuracion:
                 Intent intent8 = new Intent(getApplicationContext(), ConfiguracionesActivity.class);
