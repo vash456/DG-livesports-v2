@@ -1,19 +1,21 @@
 package com.dg_livesports.dg_livesports;
 
 
+
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TableLayout;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -29,46 +31,47 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TablasFragment extends Fragment {
+public class HoyFragment extends ListFragment {
 
     private final String HTTP_EVENT="http://apiclient.resultados-futbol.com/scripts/api/api.php";
 
     private String keyAPI = "abe05176484293b0fea3c0f265e2106c";
-    private String tzAPI = "Europe/Madrid";
+    private String tzAPI = "America/Bogota";
     private String formatAPI = "json";
-    private String reqAPI = "tables";
-    private String leagueAPI = "1";
-    private String groupAPI = "1";
+    private String reqAPI = "matchsday";
+    //private String dateAPI = "2016-2-19";
 
-    private String URL_API = HTTP_EVENT + "?key="+keyAPI+"&tz="+tzAPI+"&format="+formatAPI
-            +"&req="+reqAPI+"&league="+leagueAPI+"&group"+groupAPI;
+    //private String URL_API = HTTP_EVENT + "?key="+keyAPI+"&tz="+tzAPI+"&format="+formatAPI+"&req="+reqAPI+"&date="+dateAPI;
 
+    ArrayAdapter adaptador;
     HttpURLConnection con;
     ProgressDialog progressDialog;
 
-    Tabla tabla;
-
-    public TablasFragment() {
+    public HoyFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_tablas, container, false);
 
+        Calendar calendario = Calendar.getInstance();
+        int year = calendario.get(Calendar.YEAR);
+        int month = calendario.get(Calendar.MONTH)+1;
+        int day = calendario.get(Calendar.DAY_OF_MONTH);
 
+        String dateAPI = String.valueOf(year+"-"+month+"-"+day);//fecha actual
 
-        View x =  inflater.inflate(R.layout.fragment_tablas,null);
-
-        tabla = new Tabla(getActivity(), (TableLayout)x.findViewById(R.id.tabla));
+        String URL_API = HTTP_EVENT + "?key="+keyAPI+"&tz="+tzAPI+"&format="+formatAPI+"&req="+reqAPI+"&date="+dateAPI;
 
         try {
 
@@ -78,14 +81,18 @@ public class TablasFragment extends Fragment {
             e.printStackTrace();
         }
 
-        return x;
-
-
-
+        return super.onCreateView(inflater,container,savedInstanceState);
 
     }
 
-    public class JsonTask extends AsyncTask<URL, Void, List<Clasificaciones>>{
+    public void onStart(){
+        super.onStart();
+        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        //getListView().setOnItemClickListener(this);
+
+    }
+
+    public class JsonTask extends AsyncTask<URL, Void, List<Partidos>> {
 
         Context context;
 
@@ -101,8 +108,8 @@ public class TablasFragment extends Fragment {
         }
 
         @Override
-        protected List<Clasificaciones> doInBackground(URL... urls) {
-            List<Clasificaciones> tablaclasi = null;
+        protected List<Partidos> doInBackground(URL... urls) {
+            List<Partidos> partidosList = null;
 
             try {
 
@@ -115,8 +122,8 @@ public class TablasFragment extends Fragment {
                 int statusCode = con.getResponseCode();
 
                 if(statusCode!=200) {
-                    tablaclasi = new ArrayList<>();
-                    tablaclasi.add(new Clasificaciones());
+                    partidosList = new ArrayList<>();
+                    partidosList.add(new Partidos());
 
                 } else {
 
@@ -128,7 +135,7 @@ public class TablasFragment extends Fragment {
                     // GsonAnimalParser parser = new GsonAnimalParser();
                     JsonTablasParser parser = new JsonTablasParser();
 
-                    tablaclasi = parser.leerFlujoJson(in);
+                    partidosList = parser.leerFlujoJson(in);
 
 
                 }
@@ -139,36 +146,21 @@ public class TablasFragment extends Fragment {
             }finally {
                 con.disconnect();
             }
-            return tablaclasi;
+            return partidosList;
         }
 
         @Override
-        protected void onPostExecute(List<Clasificaciones> tablaclasi) {
+        protected void onPostExecute(List<Partidos> partidosList) {
             /*
             Asignar los objetos de Json parseados al adaptador
              */
             progressDialog.dismiss();
 
-            if(tablaclasi!=null) {
+            if(partidosList!=null) {
 
-                tabla.agregarCabecera(R.array.cabecera_tabla);
-                for(int i = 0; i < tablaclasi.size(); i++)
-                {
-                    ArrayList<String> elementos = new ArrayList<String>();
-                    elementos.add(Integer.toString(i+1));
-                    elementos.add(tablaclasi.get(i).getDirection());
-                    elementos.add(tablaclasi.get(i).getURLshield());
-                    elementos.add(tablaclasi.get(i).getTeam());
-                    elementos.add(tablaclasi.get(i).getPoints());
-                    elementos.add(tablaclasi.get(i).getRound());
-                    elementos.add(tablaclasi.get(i).getWins());
-                    elementos.add(tablaclasi.get(i).getDraws());
-                    elementos.add(tablaclasi.get(i).getLosses());
-                    elementos.add(tablaclasi.get(i).getGf());
-                    elementos.add(tablaclasi.get(i).getGa());
-                    elementos.add(tablaclasi.get(i).getAvg());
-                    tabla.agregarFilaTabla(elementos);
-                }
+                adaptador = new AdaptadorPartidos(getContext(), partidosList);
+
+                setListAdapter(adaptador);
 
             }else{
                 Toast.makeText(
@@ -183,10 +175,10 @@ public class TablasFragment extends Fragment {
 
     public class JsonTablasParser {
 
-        public List<Clasificaciones> leerFlujoJson(InputStream in) throws IOException {
+        public List<Partidos> leerFlujoJson(InputStream in) throws IOException {
 
             // CREAMOS LA INSTANCIA DE LA CLASE
-            ArrayList<Clasificaciones> lista = new ArrayList<>();
+            ArrayList<Partidos> lista = new ArrayList<>();
 
             String jsonStr = inputStreamToString(in).toString();
 
@@ -195,29 +187,28 @@ public class TablasFragment extends Fragment {
                     JSONObject jsonObj = new JSONObject(jsonStr);
 
                     // Getting JSON Array node
-                    JSONArray pers = jsonObj.getJSONArray("table");
+                    JSONArray pers = jsonObj.getJSONArray("matches");
 
                     // looping through All Equipos
                     for (int i = 0; i < pers.length(); i++) {
                         JSONObject c = pers.getJSONObject(i);
 
 
-                        Clasificaciones clasificacion = new Clasificaciones();
+                        Partidos partidos = new Partidos();
 
-                        clasificacion.setPos(c.getString("pos"));
-                        clasificacion.setDirection(c.getString("direction"));
-                        clasificacion.setURLshield(c.getString("shield"));
-                        clasificacion.setTeam(c.getString("team"));
-                        clasificacion.setPoints(c.getString("points"));
-                        clasificacion.setRound(c.getString("round"));
-                        clasificacion.setWins(c.getString("wins"));
-                        clasificacion.setDraws(c.getString("draws"));
-                        clasificacion.setLosses(c.getString("losses"));
-                        clasificacion.setGf(c.getString("gf"));
-                        clasificacion.setGa(c.getString("ga"));
-                        clasificacion.setAvg(c.getString("avg"));
+                        partidos.setLocal(c.getString("local"));
+                        partidos.setVisitor(c.getString("visitor"));
+                        partidos.setCompetition_name(c.getString("competition_name"));
+                        partidos.setURLcflag(c.getString("cflag"));
+                        partidos.setURLlocal_shield(c.getString("local_shield"));
+                        partidos.setURLvisitor_shield(c.getString("visitor_shield"));
+                        partidos.setDate(c.getString("date"));
+                        partidos.setResult(c.getString("result"));
+                        partidos.setExtraTxt(c.getString("extraTxt"));
+                        partidos.setHour(c.getString("hour"));
+                        partidos.setMinute(c.getString("minute"));
 
-                        lista.add(clasificacion);
+                        lista.add(partidos);
 
                     }
                     return lista;

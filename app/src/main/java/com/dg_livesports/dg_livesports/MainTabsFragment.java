@@ -70,8 +70,8 @@ public class MainTabsFragment extends Fragment {
         {
             switch (position){
                 case 0 : return new AyerFragment();
-                case 1 : return new AyerFragment();
-                case 2 : return new AyerFragment();
+                case 1 : return new HoyFragment();
+                case 2 : return new MananaFragment();
             }
             return null;
         }

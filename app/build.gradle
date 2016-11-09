@@ -32,5 +32,7 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.firebase:firebase-client-android:2.5.2+'
+    compile 'org.apache.httpcomponents:httpclient:4.5'
+    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -3,6 +3,7 @@
     package="com.dg_livesports.dg_livesports" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -23,22 +24,7 @@
             android:name=".RegistroActivity"
             android:label="@string/title_activity_registro"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ResultadosActivity"
-            android:label="@string/title_activity_resultados"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ParttablasActivity"
-            android:label="@string/title_activity_parttablas"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".NoticiasActivity"
-            android:label="@string/title_activity_noticias"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".VideosActivity"
-            android:label="@string/title_activity_videos"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".NotificacionesActivity"
             android:label="@string/title_activity_notificaciones"
@@ -47,10 +33,7 @@
             android:name=".ConfiguracionesActivity"
             android:label="@string/title_activity_configuraciones"
             android:theme="@style/AppTheme.ActionBar.TitleTextStyle"/>
-        <activity
-            android:name=".SocialActivity"
-            android:label="@string/title_activity_social"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

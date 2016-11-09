@@ -29,11 +29,18 @@
 
     <!--Array con los valores de la cabecera de la tabla-->
     <string-array name="cabecera_tabla">
-        <item>Id de la fila</item>
-        <item>Valor</item>
-        <item>Valor 2</item>
-        <item>Valor 3</item>
-        <item>Valor 4</item>
+        <item>Pos</item>
+        <item>  </item>
+        <item>  </item>
+        <item>Equipo</item>
+        <item>Puntos</item>
+        <item>P.J.</item>
+        <item>G. </item>
+        <item>E. </item>
+        <item>P. </item>
+        <item>G.F.</item>
+        <item>G.C.</item>
+        <item>D.G.</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
