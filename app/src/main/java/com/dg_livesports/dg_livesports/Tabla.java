@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.AsyncTask;
@@ -92,6 +93,8 @@ public class Tabla {
 
             if (UrlImagen.length()>40){
                 ImageView imagen_shield = new ImageView(actividad);
+                //imagen_shield.setBackgroundResource(R.drawable.tabla_celda2);
+                imagen_shield.setBackground(actividad.getResources().getDrawable(R.color.white));
                 new LoadImage(imagen_shield).execute(UrlImagen);
                 //imagen_shield.setBackgroundResource(R.drawable.tabla_celda);
                 layoutCelda = new TableRow.LayoutParams(50, TableRow.LayoutParams.WRAP_CONTENT);
@@ -103,6 +106,8 @@ public class Tabla {
                 if(UrlImagen.equals("u")){
                     ImageView flecha_up = new ImageView(actividad);
                     //flecha_up.setImageResource(R.drawable.arrowup_flech);
+                    flecha_up.setBackground(actividad.getResources().getDrawable(R.color.white));
+                    //flecha_up.setBackgroundResource(R.drawable.tabla_celda2);
                     Bitmap bmp = BitmapFactory.decodeResource(actividad.getResources(), R.drawable.arrowup_flech);
                     flecha_up.setImageBitmap(bmp);
                     layoutCelda = new TableRow.LayoutParams(40, 40);
@@ -113,6 +118,8 @@ public class Tabla {
                 }else if (UrlImagen.equals("d")){
                     ImageView flecha_down = new ImageView(actividad);
                     //flecha_down.setImageResource(R.drawable.arrowdown_flech);
+                    flecha_down.setBackground(actividad.getResources().getDrawable(R.color.white));
+                    //flecha_down.setBackgroundResource(R.drawable.tabla_celda2);
                     Bitmap bmp = BitmapFactory.decodeResource(actividad.getResources(), R.drawable.arrowdown_flech);
                     flecha_down.setImageBitmap(bmp);
                     layoutCelda = new TableRow.LayoutParams(40, 40);
@@ -155,32 +162,6 @@ public class Tabla {
         p.getTextBounds(texto, 0, texto.length(), bounds);
         if (bounds.width()<50)return 50;
         return bounds.width();
-    }
-
-    class LoadImage extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public LoadImage(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                mIcon11 = BitmapFactory.decodeStream((InputStream)new URL(urldisplay).getContent());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
 
 }

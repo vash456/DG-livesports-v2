@@ -19,6 +19,21 @@
         android:layout_height="wrap_content">
     </android.support.design.widget.TabLayout>
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="190dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:background="@color/gray"
+        app:popupTheme="@style/AppTheme" >
+
+        <Spinner
+            android:id="@+id/CmbToolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </android.support.v7.widget.Toolbar>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"

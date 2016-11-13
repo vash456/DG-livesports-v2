@@ -3,6 +3,9 @@ package com.dg_livesports.dg_livesports;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +17,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +55,14 @@ public class AyerFragment extends ListFragment {
 
     //private String URL_API = HTTP_EVENT + "?key="+keyAPI+"&tz="+tzAPI+"&format="+formatAPI+"&req="+reqAPI+"&date="+dateAPI;
 
+    private String FIREBASE_URL="https://equiposfavoritos-36db4.firebaseio.com";
+    private Firebase firebasedatos;
+
+    SharedPreferences prefs;
+    private String user;
+    private String filtro_mostrar;
+
+
     ArrayAdapter adaptador;
     HttpURLConnection con;
     ProgressDialog progressDialog;
@@ -61,6 +77,14 @@ public class AyerFragment extends ListFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+        prefs = getActivity().getSharedPreferences("preferencia", Context.MODE_PRIVATE);
+        user = String.valueOf(prefs.getString("var_name","Nombre no definido"));
+        filtro_mostrar = String.valueOf(prefs.getString("var_filtro","Todos"));
+
+        Firebase.setAndroidContext(getContext());
+        firebasedatos = new Firebase(FIREBASE_URL);
+
+        // obtener fecha actual
         Calendar calendario = Calendar.getInstance();
         int year = calendario.get(Calendar.YEAR);
         int month = calendario.get(Calendar.MONTH)+1;
@@ -175,7 +199,7 @@ public class AyerFragment extends ListFragment {
         public List<Partidos> leerFlujoJson(InputStream in) throws IOException {
 
             // CREAMOS LA INSTANCIA DE LA CLASE
-            ArrayList<Partidos> lista = new ArrayList<>();
+            final ArrayList<Partidos> lista = new ArrayList<>();
 
             String jsonStr = inputStreamToString(in).toString();
 
@@ -188,24 +212,66 @@ public class AyerFragment extends ListFragment {
 
                     // looping through All Equipos
                     for (int i = 0; i < pers.length(); i++) {
-                        JSONObject c = pers.getJSONObject(i);
+                        final JSONObject c = pers.getJSONObject(i);
+
+                        if (filtro_mostrar.equals("Favoritos")){
+
+                            // filtrar los resultados por favoritos y por todos
+                            final String id = user+"_EquiposFav "+ c.getString("dteam1");
+                            final String id2 = user+"_EquiposFav "+ c.getString("dteam2");
+
+                            firebasedatos.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.child(id).exists() || dataSnapshot.child(id2).exists()){
+
+                                        Partidos partidos = new Partidos();
+
+                                        try {
+                                            partidos.setLocal(c.getString("local"));
+                                            partidos.setVisitor(c.getString("visitor"));
+                                            partidos.setCompetition_name(c.getString("competition_name"));
+                                            partidos.setURLcflag(c.getString("cflag"));
+                                            partidos.setURLlocal_shield(c.getString("local_shield"));
+                                            partidos.setURLvisitor_shield(c.getString("visitor_shield"));
+                                            partidos.setDate(c.getString("date"));
+                                            partidos.setResult(c.getString("result"));
+                                            partidos.setExtraTxt(c.getString("extraTxt"));
+                                            partidos.setHour(c.getString("hour"));
+                                            partidos.setMinute(c.getString("minute"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
 
 
-                        Partidos partidos = new Partidos();
+                                        lista.add(partidos);
 
-                        partidos.setLocal(c.getString("local"));
-                        partidos.setVisitor(c.getString("visitor"));
-                        partidos.setCompetition_name(c.getString("competition_name"));
-                        partidos.setURLcflag(c.getString("cflag"));
-                        partidos.setURLlocal_shield(c.getString("local_shield"));
-                        partidos.setURLvisitor_shield(c.getString("visitor_shield"));
-                        partidos.setDate(c.getString("date"));
-                        partidos.setResult(c.getString("result"));
-                        partidos.setExtraTxt(c.getString("extraTxt"));
-                        partidos.setHour(c.getString("hour"));
-                        partidos.setMinute(c.getString("minute"));
+                                    }
+                                }
 
-                        lista.add(partidos);
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
+
+                                }
+                            });
+
+                        }else {
+                            Partidos partidos = new Partidos();
+
+                            partidos.setLocal(c.getString("local"));
+                            partidos.setVisitor(c.getString("visitor"));
+                            partidos.setCompetition_name(c.getString("competition_name"));
+                            partidos.setURLcflag(c.getString("cflag"));
+                            partidos.setURLlocal_shield(c.getString("local_shield"));
+                            partidos.setURLvisitor_shield(c.getString("visitor_shield"));
+                            partidos.setDate(c.getString("date"));
+                            partidos.setResult(c.getString("result"));
+                            partidos.setExtraTxt(c.getString("extraTxt"));
+                            partidos.setHour(c.getString("hour"));
+                            partidos.setMinute(c.getString("minute"));
+
+                            lista.add(partidos);
+                        }
 
                     }
                     return lista;

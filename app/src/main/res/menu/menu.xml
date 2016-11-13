@@ -11,4 +11,10 @@
         android:orderInCategory="100"
         android:title="@string/cerrar_sesion"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/item_compartir"
+        android:title = "probando"
+        android:orderInCategory="100"
+        android:icon="@drawable/icon_soccer"
+        app:showAsAction="always"/>
 </menu>

@@ -85,43 +85,4 @@ public class AdaptadorPartidos extends ArrayAdapter<Partidos> {
 
     }
 
-    /**
-     * Este método nos permite obtener el Id de un drawable a través
-     * de su nombre
-     * @param nombre  Nombre del drawable sin la extensión de la imagen
-     *
-     * @return Retorna un tipo int que representa el Id del recurso
-     */
-    private int convertirRutaEnId(String nombre){
-        Context context = getContext();
-        return context.getResources()
-                .getIdentifier(nombre, "drawable", context.getPackageName());
-    }
-
-    class LoadImage extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public LoadImage(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                mIcon11 = BitmapFactory.decodeStream((InputStream)new URL(urldisplay).getContent());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
-
 }

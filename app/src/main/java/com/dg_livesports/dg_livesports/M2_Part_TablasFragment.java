@@ -57,7 +57,7 @@ public class M2_Part_TablasFragment extends Fragment {
         {
             switch (position){
                 case 0 : return new TablasFragment();
-                case 1 : return new TablasFragment();
+                case 1 : return new EquiposFragment();
                 case 2 : return new TablasFragment();
             }
             return null;

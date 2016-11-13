@@ -20,7 +20,8 @@ import com.firebase.client.ValueEventListener;
 
 public class RegistroActivity extends AppCompatActivity {
 
-    private String FIREBASE_URL="https://final-dygsports.firebaseio.com";
+    //private String FIREBASE_URL="https://final-dygsports.firebaseio.com";
+    private String FIREBASE_URL="https://equiposfavoritos-36db4.firebaseio.com";
     private Firebase firebasedatos;
 
     private Button b_aceptar, b_cancelar;

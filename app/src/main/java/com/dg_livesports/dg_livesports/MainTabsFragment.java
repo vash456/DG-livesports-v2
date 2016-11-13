@@ -1,15 +1,31 @@
 package com.dg_livesports.dg_livesports;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.logging.Handler;
 
 
 /**
@@ -17,6 +33,10 @@ import android.view.ViewGroup;
  */
 public class MainTabsFragment extends Fragment {
 
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
+
+    String filtro_mostrar;
 
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
@@ -33,6 +53,12 @@ public class MainTabsFragment extends Fragment {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_m1_resultados, container, false);
 
+        // modificar menu overflow
+        //setHasOptionsMenu(true);
+
+        prefs = getActivity().getSharedPreferences("preferencia", Context.MODE_PRIVATE);
+        editor = prefs.edit();
+
         View x =  inflater.inflate(R.layout.fragment_main_tabs,null);
         tabLayout = (TabLayout) x.findViewById(R.id.tabs);
         viewPager = (ViewPager) x.findViewById(R.id.viewpager);
@@ -40,6 +66,7 @@ public class MainTabsFragment extends Fragment {
         /**
          *Set an Apater for the View Pager
          */
+
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
 
         /**
@@ -55,9 +82,87 @@ public class MainTabsFragment extends Fragment {
             }
         });
 
+        Toolbar toolbar = (Toolbar) x.findViewById(R.id.toolbar2);
+        //setSupportActionBar(toolbar);
+        toolbar.setTitle("Mostrar: ");
+        toolbar.setTitleTextAppearance(getActivity(), R.style.estilo_toolbarFiltro);
+        //toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.icon_field_football));
+
+
+        //filtro en toolbar
+        final Spinner cmbToolbar = (Spinner) x.findViewById(R.id.CmbToolbar);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                getContext(),
+                R.layout.appbar_filter_title,
+                new String[]{" Todos ", " Favoritos "});
+
+        adapter.setDropDownViewResource(R.layout.appbar_filter_list);
+
+        cmbToolbar.setAdapter(adapter);
+
+        filtro_mostrar = String.valueOf(prefs.getString("var_filtro","Todos"));
+
+        if (filtro_mostrar.equals("Favoritos")) cmbToolbar.setSelection(1);
+
+        cmbToolbar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                //... Acciones al seleccionar una opción de la lista
+                Log.i("Toolbar 3", "Seleccionada opción " + i);
+                //Toast.makeText(getContext(), "Seleccionada opción " + i, Toast.LENGTH_SHORT).show();
+
+                if (i == 0){
+                    filtro_mostrar = "Todos";
+                    editor.putString("var_filtro",filtro_mostrar);
+                    editor.commit();
+
+
+                }else {
+                    filtro_mostrar = "Favoritos";
+                    editor.putString("var_filtro",filtro_mostrar);
+                    editor.commit();
+                }
+
+                int position = tabLayout.getSelectedTabPosition();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //... Acciones al no existir ningún elemento seleccionado
+
+            }
+        });
+
+
+
         return x;
 
     }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // TODO Add your menu entries here
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_filtro, menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_todos) {
+            return true;
+        }
+
+        if (id == R.id.action_favoritos) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     class MyAdapter extends FragmentPagerAdapter {
 
